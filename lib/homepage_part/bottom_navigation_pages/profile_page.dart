@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_project/homepage_part/main_menu_pages/edit_profile_page.dart';
+import 'package:fitness_app_project/homepage_part/widgets/about_app_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -125,7 +126,12 @@ class _ProfilePageState extends State<ProfilePage> {
             _ProfileTile(
               icon: Icons.info_outline,
               title: "About App",
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => AboutAppPage())
+                );
+              },
             ),
             _ProfileTile(
               icon: Icons.logout_rounded,

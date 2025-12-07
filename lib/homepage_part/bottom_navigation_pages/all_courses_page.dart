@@ -15,7 +15,8 @@ class AllCoursesPage extends StatefulWidget {
 
 class _AllCoursesPageState extends State<AllCoursesPage> {
   final _api = ExerciseApiService();
-  late Future<Map<String, List<Exercise>>> _allExercisesFuture;
+  Map<String, List<Exercise>> data = {};
+  bool loading = true;
 
   final muscleImages = {
     "abdominals": "assets/images/abs_training.png",
@@ -34,18 +35,31 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
   @override
   void initState() {
     super.initState();
-    _allExercisesFuture = _api.getAllMuscleExercises();
+    loadExercises();
+  }
+
+  Future<void> loadExercises() async {
+    final result = await _api.getAllMuscleExercises(); 
+    if (!mounted) return;
+    setState(() {
+      data = result;
+      loading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (loading && data.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           "All Workouts",
           style: GoogleFonts.jetBrainsMono(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               color: Colors.white,
               fontSize: 22,
               fontWeight: FontWeight.w800,
@@ -56,169 +70,107 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
         elevation: 0,
         backgroundColor: Colors.pinkAccent,
       ),
+      body: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          final muscle = data.keys.elementAt(index);
+          final exercises = data[muscle] ?? [];
+          if (exercises.isEmpty) return const SizedBox.shrink();
 
-      body: FutureBuilder(
-        future: _allExercisesFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
+          final level = exercises.isNotEmpty ? exercises.first.difficulty : 'N/A';
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 48,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Error occurred:",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "${snapshot.error}", // Это покажет текст ошибки
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _allExercisesFuture = _api.getAllMuscleExercises();
-                        });
-                      },
-                      child: const Text("Retry"),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          final data = snapshot.data;
-
-          if (data == null || data.isEmpty) {
-            return const Center(
-              child: Text("No data available", style: TextStyle(fontSize: 16)),
-            );
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              final muscle = data.keys.elementAt(index);
-              final exercises = data[muscle] ?? [];
-              if (exercises.isEmpty) return const SizedBox.shrink();
-
-              final String level = exercises.isNotEmpty
-                  ? exercises.first.difficulty
-                  : 'N/A';
-
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => MuscleDetailsPage(
-                        muscle: muscle,
-                        exercisesCount: exercises.length,
-                        level: level,
-                        exercises: exercises,
-                      ),
-                    ),
-                  );
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 180),
-                  margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(
-                      width: 2,
-                      color: Colors.pinkAccent.withValues(alpha: 0.4),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.pinkAccent.withValues(alpha: 0.25),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          muscleImages[muscle] ?? "assets/images/abss.png",
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              muscle.replaceAll("_", " ").toUpperCase(),
-                              style: GoogleFonts.jetBrainsMono(
-                                textStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 2,
-                                  fontSize: 17,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              "${exercises.length} exercises • ${exercises.length * 2} min",
-                              style: GoogleFonts.jetBrainsMono(
-                                textStyle: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "Level: $level",
-                              style: GoogleFonts.jetBrainsMono(
-                                textStyle: TextStyle(
-                                  color: Colors.pinkAccent,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18,
-                        color: Colors.pinkAccent,
-                      ),
-                    ],
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => MuscleDetailsPage(
+                    muscle: muscle,
+                    exercisesCount: exercises.length,
+                    level: level,
+                    exercises: exercises,
                   ),
                 ),
               );
             },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  width: 2,
+                  color: Colors.pinkAccent.withValues(alpha: 0.4),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.pinkAccent.withValues(alpha: 0.25),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      muscleImages[muscle] ?? "assets/images/abss.png",
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          muscle.replaceAll("_", " ").toUpperCase(),
+                          style: GoogleFonts.jetBrainsMono(
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          "${exercises.length} exercises • ${exercises.length * 2} min",
+                          style: GoogleFonts.jetBrainsMono(
+                            textStyle: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "Level: $level",
+                          style: GoogleFonts.jetBrainsMono(
+                            textStyle: const TextStyle(
+                              color: Colors.pinkAccent,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 18,
+                    color: Colors.pinkAccent,
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),

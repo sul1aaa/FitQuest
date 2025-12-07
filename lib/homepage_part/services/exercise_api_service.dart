@@ -4,6 +4,9 @@ import 'package:logger/web.dart';
 import 'package:fitness_app_project/homepage_part/services/data/video_map.dart';
 
 class ExerciseApiService {
+  static final ExerciseApiService _instance = ExerciseApiService._internal();
+  factory ExerciseApiService() => _instance;
+  ExerciseApiService._internal();
   final logger = Logger();
   final Dio _dio = Dio(
     BaseOptions(

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitness_app_project/homepage_part/bottom_navigation_pages/bottom_navigation.dart';
+import 'package:fitness_app_project/onboarding_part/pages/journey_start_page.dart';
 import 'package:fitness_app_project/registration_part/pages/first_screen_page.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -68,7 +68,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => BottomNavigation(user: user),
+          builder: (_) => JourneyStartPage(),
         ),
       );
     }

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_project/homepage_part/exercises/search_exercises_page.dart';
 import 'package:fitness_app_project/homepage_part/main_menu_pages/stats_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,23 +78,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
-            Row(
-              children: [
-                const Icon(Icons.search, size: 28),
-                SizedBox(
-                  height: 24,
-                  child: VerticalDivider(
-                    thickness: 1,
-                    color: Colors.grey.shade300,
-                    width: 20,
+            IconButton(
+              onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => SearchExercisesPage(),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: const Icon(Icons.menu, size: 28),
-                ),
-              ],
-            ),
+                );
+              }, 
+              icon: Icon(Icons.search)
+            )
           ],
         ),
       ),

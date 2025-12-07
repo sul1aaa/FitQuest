@@ -189,6 +189,7 @@ class _SignUpPageState extends State<SignUpPage> {
           
                               CustomTextField(
                                 hintText: 'Email',
+                                keyboardType: TextInputType.emailAddress,
                                 controller: _emailController,
                                 validator: (email) =>
                                     email != null && !EmailValidator.validate(email)

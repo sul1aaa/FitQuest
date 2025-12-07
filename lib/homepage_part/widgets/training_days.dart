@@ -13,17 +13,9 @@ class TrainingDays extends StatefulWidget {
 
 class _TrainingDaysState extends State<TrainingDays> {
   final List<String> muscles = [
-    'abdominals',
-    'biceps',
-    'chest',
-    'forearms',
-    'glutes',
-    'lats',
-    'lower_back',
-    'middle_back',
-    'neck',
-    'quadriceps',
-    'triceps',
+    'abdominals', 'biceps', 'chest', 'forearms',
+    'glutes', 'lats', 'lower_back', 'middle_back',
+    'neck', 'quadriceps', 'triceps'
   ];
 
   final muscleImages = {
@@ -42,7 +34,6 @@ class _TrainingDaysState extends State<TrainingDays> {
 
   final ExerciseApiService api = ExerciseApiService();
   Map<String, List<Exercise>> exercisesByMuscle = {};
-
   bool loading = true;
 
   @override
@@ -52,7 +43,7 @@ class _TrainingDaysState extends State<TrainingDays> {
   }
 
   Future<void> loadExercises() async {
-    final data = await api.getAllMuscleExercises();
+    final data = await api.getAllMuscleExercises(); 
     if (!mounted) return;
     setState(() {
       exercisesByMuscle = data;
@@ -62,8 +53,8 @@ class _TrainingDaysState extends State<TrainingDays> {
 
   @override
   Widget build(BuildContext context) {
-    if (loading) {
-      return Center(child: CircularProgressIndicator());
+    if (loading && exercisesByMuscle.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
     }
 
     return SizedBox(
@@ -74,7 +65,7 @@ class _TrainingDaysState extends State<TrainingDays> {
         itemBuilder: (context, index) {
           final muscle = muscles[index];
           final exercises = exercisesByMuscle[muscle] ?? [];
-          if (exercises.isEmpty) return SizedBox.shrink();
+          if (exercises.isEmpty) return const SizedBox.shrink();
 
           return GestureDetector(
             onTap: () {
