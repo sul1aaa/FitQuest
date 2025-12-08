@@ -45,24 +45,11 @@ class _ProfilePageState extends State<ProfilePage> {
             Center(
               child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [Colors.pink, Colors.pink.shade200],
-                      ),
-                    ),
-                    padding: const EdgeInsets.all(4),
-                    child: CircleAvatar(
-                      radius: 55,
-                      backgroundColor: Colors.white,
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/images/avatarImg.png',
-                          fit: BoxFit.cover,
-                          height: 100,
-                        ),
-                      ),
+                  CircleAvatar(
+                    radius: 55,
+                    backgroundColor: Colors.white,
+                    child: ClipOval(
+                      child: Image.asset('assets/images/avatarImg.png'),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -106,6 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   context, 
                   MaterialPageRoute(builder: (context) => EditProfilePage(user: currentUser),)
                 );
+                setState(() {});
               },
             ),
             _ProfileTile(

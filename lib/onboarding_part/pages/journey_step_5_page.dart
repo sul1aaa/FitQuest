@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitness_app_project/homepage_part/bottom_navigation_pages/bottom_navigation.dart';
+import 'package:fitness_app_project/homepage_part/bottom_navigation_pages/stats_screen.dart';
 import 'package:fitness_app_project/onboarding_part/widgets/selectable_option_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -105,7 +105,7 @@ class _JourneyStep5PageState extends State<JourneyStep5Page> {
                             context,
                             PageRouteBuilder(
                               pageBuilder: (context, animation1, animation2) =>
-                                  BottomNavigation(user: user!),
+                                  StatsScreen(user: user!),
                               transitionDuration: Duration.zero,
                             ),
                           );

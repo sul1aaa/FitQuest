@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_project/homepage_part/widgets/community_button.dart';
+import 'package:fitness_app_project/homepage_part/widgets/daily_report_button.dart';
 import 'package:fitness_app_project/homepage_part/widgets/dark_header.dart';
 import 'package:fitness_app_project/homepage_part/widgets/habits_section.dart';
 import 'package:fitness_app_project/homepage_part/widgets/stats_row.dart';
 import 'package:fitness_app_project/homepage_part/widgets/training_days.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StatsScreen extends StatelessWidget {
   final User user;
@@ -46,30 +49,36 @@ class StatsScreen extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'What are you training today?',
-                      style: TextStyle(
-                        fontSize: 18,
+                  children: <Widget>[
+                  Text(
+                    'What are you training today?',
+                    style: GoogleFonts.jetBrainsMono(
+                      textStyle: TextStyle(
                         fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
                     ),
-                    SizedBox(height: 15),
+                  ),
+                  SizedBox(height: 10.0),
+                  TrainingDays(),
+                  SizedBox(height: 30.0),
 
-                    TrainingDays(),
-
-                    SizedBox(height: 30),
-                    Text(
-                      'Your habits',
-                      style: TextStyle(
-                        fontSize: 18,
+                  Text(
+                    'Your habits',
+                    style: GoogleFonts.jetBrainsMono(
+                      textStyle: TextStyle(
                         fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
                     ),
-                    SizedBox(height: 15),
-
-                    HabitsSection(),
-                  ],
+                  ),
+                  const SizedBox(height: 10.0),
+                  HabitsSection(),
+                  const SizedBox(height: 30.0),
+                  CommunityButton(),
+                  const SizedBox(height: 20),
+                  DailyReportsButton(),
+                ],
                 ),
               ),
             ),

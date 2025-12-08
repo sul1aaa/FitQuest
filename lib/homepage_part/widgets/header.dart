@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_project/homepage_part/exercises/search_exercises_page.dart';
-import 'package:fitness_app_project/homepage_part/main_menu_pages/stats_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -33,50 +32,40 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => StatsScreen(user: user),
-                  ),
-                );
-              },
-              child: Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 20,
-                    backgroundImage: AssetImage('assets/images/avatarImg.png'),
-                    backgroundColor: Colors.grey,
-                  ),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Hello,',
-                        style: GoogleFonts.jetBrainsMono(
-                          textStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                          ),
+            Row(
+              children: [
+                const CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage('assets/images/avatarImg.png'),
+                  backgroundColor: Colors.grey,
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Hello,',
+                      style: GoogleFonts.jetBrainsMono(
+                        textStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
                         ),
                       ),
-                      Text(
-                        userName,
-                        style: GoogleFonts.jetBrainsMono(
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    ),
+                    Text(
+                      userName,
+                      style: GoogleFonts.jetBrainsMono(
+                        textStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
             IconButton(
               onPressed: (){
